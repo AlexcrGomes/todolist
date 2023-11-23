@@ -91,16 +91,14 @@ const deleteOneTask = async (req, res) => {
     }
 };
 
-const taskcheck = async (req, res) => {
+const taskCheck = async (req, res) => {
     try {
-        const task = task.findOne({_id: req.params.id });
-        
+        const task = await Task.findOne({ _id: req.params.id });
         task.check ? task.check = false : task.check = true;
-
-        await Task.updateOne({_id: req.params.id});
-        res.redirect('/');
-    }catch (err) {
-        res.status(500).send({error: err.message});
+        await Task.updateOne({ _id: req.params.id }, task);
+        res.redirect("/");
+    } catch (err) {
+        res.status(500).send({ error: err.message });
     }
 };
 
@@ -110,5 +108,5 @@ module.exports = {
     getById,
     updateOneTask,
     deleteOneTask,
-    taskcheck,
+    taskCheck,
 };
