@@ -1,4 +1,5 @@
 const Task = require('../models/Task');
+const User = require('../models/User');
 
 let message = '';
 let type = '';
@@ -102,6 +103,79 @@ const taskCheck = async (req, res) => {
     }
 };
 
+const signup = async (req, res) => {
+    const user = req.body;
+
+    if (!user.nome || !user.email || !user.senha) {
+        message = 'Todos os campos são obrigatórios';
+        type = 'danger';
+        return res.redirect('/');
+    }
+
+    const existingUser = await User.findOne({ email: user.email });
+    if (existingUser) {
+        message = 'Já existe um usuário cadastrado com esse e-mail';
+        type = 'danger';
+        return res.redirect('/');
+    }
+
+    try {
+        await User.create(user);
+        message = 'Usúario criado com sucesso.';
+        type = 'success';
+        return res.redirect('/');
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
+
+const signin = async (req, res) => {
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+        message = 'Por favor, preencha os campos são obrigatórios';
+        type = 'danger';
+        return res.redirect('/');
+    }
+
+    try {
+        const existingUser = await User.findOne({ email });
+        if (!existingUser) {
+            message = 'E-mail não cadastrado, por favor realize o cadastro';
+            type = 'danger';
+            return res.redirect('/');
+        }
+        if (senha !== existingUser.senha) {
+            message = 'Senha ou e-mail incorreto';
+            type = 'danger';
+            return res.redirect('/');
+        }
+        message = `Bem vindo, ${existingUser.nome.split(' ')[0]}`;
+        type = 'success';
+        return res.redirect('/');
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
+
+const getALLUsers = async (req, res) => {
+    try {
+        setTimeout(() => {
+            message = ""
+        }, 1000);
+        const usersList = await User.find();
+        return res.render('index', {
+            usersList,
+            user: null,
+            userDelete: null,
+            message,
+            type
+        });
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
+
 module.exports = {
     getALLTasks,
     createTask,
@@ -109,4 +183,7 @@ module.exports = {
     updateOneTask,
     deleteOneTask,
     taskCheck,
+    signup,
+    signin,
+    getALLUsers,
 };

@@ -19,16 +19,16 @@
 
     <header>
         <h1>Cadastro de Usuário</h1>
-        <form action="/createUser" method="post">
-            <input type="text" name="nome" id="nome" placeholder="Digite seu nome" required>
-            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
-            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+        <form action="/signup" method="post">
+            <input type="text" name="nome" id="nome" placeholder="Digite seu nome" >
+            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" >
+            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" >
             <button type="submit" id="addButton">Cadastrar</button>
         </form>
-        <h1>login</h1>
-        <form action="/cadastro" method="post">
-            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
-            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+        <h1>Login</h1>
+        <form action="/signin" method="post">
+            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" >
+            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" >
             <button type="submit" id="addButton">Login</button>
         </form>
         <h1>TO DO LIST</h1>
