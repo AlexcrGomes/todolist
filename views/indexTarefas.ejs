@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Lista de Atividades</title>
+</head>
+
+<body>
+    
+    <% if (message != '') { %>
+        <section class="message message-<%= type %>">
+            <p><%= message %></p>
+            <span id="closeMessage"><i class="bi bi-x"></i></span>
+        </section>
+    <% } %>
+
+    <header>
+
+        <% if (task == null) { %>
+            <h1>TO DO LIST</h1>
+            <form action="/create" method="post">
+                <input type="text" name="task" id="task" placeholder="Enter a task">
+                <button type="submit" id="addButton">Add</button>
+                </button>
+            </form>
+        <% } else { %>
+            <h1>EDIT TASK</h1>
+            <form action="/updateOne/<%= task._id %>" method="post">
+                <input type="text" name="task" id="task" value="<%= task.task %>">
+                <button type="submit" id="updateButton">Update</button>
+                </button>
+            </form>
+        <% } %>
+
+    </header>
+
+    <section id="tasks">
+        <ul>
+            <% tasksList.forEach((task) => { %>
+                <li class="check-<%= task.check %>">
+                    <div>
+                        <a href='/check/<%= task._id %>' class="check-<%= task.check %>"><%= task.task %> </a>
+                        <span>Created on <%= task.date.toLocaleDateString('en') %></span>
+                    </div>
+                    <div>
+                        <a class="btnUpdate" href="/getById/<%= task._id %>/update"><i class="bi bi-pencil-square"></i></a>
+                        <a class="btnDelete" href="/getById/<%= task._id %>/delete"><i class="bi bi-trash"></i></a>
+                    </div>
+                </li>
+            <% }); %>
+        </ul>
+    </section>
+
+    <% if (taskDelete != null) { %>
+        <section id="modal">
+            <div id="card">
+                <div id="head">
+                    <h2>Confirm</h2>
+                    <a id="close" href="/"><i class="bi bi-x"></i></a>
+                </div>
+                <hr>
+                <p>Do you really want to delete the task: <%= taskDelete.task %>?</p>
+                <div id="btns">
+                    <a id="btnNot" href="/">No</a>
+                    <a id="btnYes" href="/deleteOne/<%= taskDelete._id %>">Yes</a>
+                </div>
+            </div>
+        </section>
+    <% } %>
+
+    <script src="script.js"></script>
+</body>
+</html>
