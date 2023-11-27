@@ -150,24 +150,15 @@ const signin = async (req, res) => {
             type = 'danger';
             return res.redirect('/');
         }
-        localStorage.setItem('user', JSON.stringify(existingUser));
         message = `Bem vindo, ${existingUser.nome.split(' ')[0]}`;
         type = 'success';
-        return res.redirect('/');
+        return res.redirect('/telaadm');
     }catch (err) {
         res.status(500).send({error: err.message});
     }
 };
 
 const logout = async (req, res) => {
-    try {
-        localStorage.removeItem('user');
-        message = 'Conta desconectada';
-        type = 'success';
-        return res.redirect('/');
-    }catch (err) {
-        res.status(500).send({error: err.message});
-    }
 };
 
 const getALLUsers = async (req, res) => {
