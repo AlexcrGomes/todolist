@@ -121,7 +121,7 @@ const signup = async (req, res) => {
 
     try {
         await User.create(user);
-        message = 'Usúario criado com sucesso.';
+        message = 'Usúario cadastrado com sucesso.';
         type = 'success';
         return res.redirect('/');
     }catch (err) {
@@ -150,7 +150,6 @@ const signin = async (req, res) => {
             type = 'danger';
             return res.redirect('/');
         }
-        localStorage.setItem('user', JSON.stringify(existingUser));
         message = `Bem vindo, ${existingUser.nome.split(' ')[0]}`;
         type = 'success';
         return res.redirect('/');
@@ -160,14 +159,7 @@ const signin = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-    try {
-        localStorage.removeItem('user');
-        message = 'Conta desconectada';
-        type = 'success';
-        return res.redirect('/');
-    }catch (err) {
-        res.status(500).send({error: err.message});
-    }
+
 };
 
 const getALLUsers = async (req, res) => {
