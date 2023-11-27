@@ -8,3 +8,6 @@ closeMessage.addEventListener('click', () => {
 setTimeout(() => {
     message.style.display = 'none';
 }, 5000);
+
+
+  

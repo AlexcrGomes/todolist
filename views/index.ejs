@@ -18,24 +18,137 @@
     <% } %>
 
     <header>
-        <h1>Cadastro de Usuário</h1>
-        <form action="/signup" method="post">
-            <input type="text" name="nome" id="nome" placeholder="Digite seu nome" >
-            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" >
-            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" >
-            <button type="submit" id="addButton">Cadastrar</button>
-        </form>
-        <h1>Login</h1>
-        <form action="/signin" method="post">
-            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" >
-            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" >
-            <button type="submit" id="addButton">Login</button>
-        </form>
-        <h1>TO DO LIST</h1>
-        <form action="/create" method="post">
-            <input type="text" name="task" id="task" placeholder="Enter a task">
-            <button type="submit" id="addButton">Add</button>
-            </button>
+        
+        <% let login = true; %>
+        <% function log() {  %>
+        <% login ? login = false : login = true; %>
+        <% } %>
+        
+        <% if (login) { %>
+
+            <div className="form-cadastro">
+                <div className="container">
+                    <form
+                    action="/signin"
+                    method="post"
+                    className="row g-3 needs-validation"
+                    noValidate
+                    >
+                    <h2>Login</h2>
+                        <div className="col-md-12">
+                            <label htmlFor="validationCustom03" className="form-label">
+                                E-mail:
+                            </label>
+                            <input 
+                            type="email"
+                            className="form-control"
+                            id="validationCustom03"
+                            placeholder="Digite seu e-mail"
+                            required
+                            >
+                        </div>
+                        <div className="col-md-12">
+                            <label htmlFor="validationCustom03" className="form-label">
+                                Senha:
+                            </label>
+                            <input 
+                            type="password"
+                            className="form-control"
+                            id="validationCustom03"
+                            placeholder="Digite sua senha"
+                            required
+                            >
+                        </div>
+                        <div className="col-12"></div>
+                        <div className="col-12">
+                            <button type="submit" className="btn btn-danger">
+                                Login
+                            </button>
+                        </div>
+                    </form>
+                        <a href="" onclick="log()" id="toggleForm">
+                            Cadastre-se
+                        </a>
+
+
+
+        <% } else { %>
+
+            <div className="form-cadastro">
+                <div className="container">
+                    <form
+                    action="/signup"
+                    method="post"
+                    className="row g-3 needs-validation"
+                    noValidate
+                    >
+                    <h2>Cadastre-se</h2>
+                        <div className="col-md-12">
+                            <label htmlFor="validationCustom01" className="form-label">
+                                Nome:
+                            </label>
+                            <input
+                            type="text"
+                            placeholder="Digite seu nome"
+                            className="form-control"
+                            id="validationCustom01"
+                            required
+                            />
+                        </div>
+                        <div className="col-md-12">
+                            <label htmlFor="validationCustom03" className="form-label">
+                                E-mail:
+                            </label>
+                            <input
+                            type="email"
+                            className="form-control"
+                            id="validationCustom03"
+                            placeholder="Digite seu e-mail"
+                            required
+                            />
+                        </div>
+                        <div className="col-md-12">
+                            <label htmlFor="validationCustom02" className="form-label">
+                                Senha:
+                            </label>
+                            <input
+                            type="password"
+                            className="form-control"
+                            id="validationCustom02"
+                            placeholder="Digite sua senha"
+                            required
+                            />
+                        </div>
+                        <div className="col-12">
+                            <div className="form-check">
+                            <input
+                            className="form-check-input"
+                            type="checkbox"
+                            defaultValue=""
+                            id="invalidCheck"
+                            required
+                            />
+                            <label className="form-check-label" htmlFor="invalidCheck">
+                              Aceito os termos e condições
+                            </label>
+                        </div>
+                    </div>
+                    <div className="col-12">
+                        <button type="submit" className="btn btn-danger">
+                            Cadastrar
+                        </button> 
+                    </div>
+                    </form>
+                    <a href='fomulario()' id="toggleForm">
+                        Login
+                    </a>
+                </div>
+            </div>
+
+
+        <% } %>
+
+
     </header>
 
     <script src="script.js"></script>

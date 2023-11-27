@@ -10,6 +10,8 @@ routes.get('/deleteOne/:id', TaskController.deleteOneTask);
 routes.get('/check/:id', TaskController.taskCheck);
 routes.post('/signup', TaskController.signup);
 routes.post('/signin', TaskController.signin);
+routes.get('/logout', TaskController.logout);
 routes.get('/usuarios', TaskController.getALLUsers);
+
 
 module.exports = routes
