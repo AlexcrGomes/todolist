@@ -121,7 +121,7 @@ const signup = async (req, res) => {
 
     try {
         await User.create(user);
-        message = 'Usúario criado com sucesso.';
+        message = 'Usúario cadastrado com sucesso.';
         type = 'success';
         return res.redirect('/');
     }catch (err) {
@@ -159,6 +159,7 @@ const signin = async (req, res) => {
 };
 
 const logout = async (req, res) => {
+    
 };
 
 const getALLUsers = async (req, res) => {
