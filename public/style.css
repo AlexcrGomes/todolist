@@ -91,3 +91,37 @@ span#close-message:hover {
   color: rgb(255, 0, 0);
 }
 
+/* Pagina de login */
+form{
+  width: 500px;
+}
+
+form input {
+  margin-bottom: 16px;
+}
+
+form button{
+  margin-bottom: 16px;
+}
+
+.terms{
+  border-bottom: 1px solid lightgrey;
+}
+
+.noAccount{
+  text-align: center;
+  padding: 16px;
+}
+
+section{
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
