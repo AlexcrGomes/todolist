@@ -109,21 +109,21 @@ const signup = async (req, res) => {
     if (!user.nome || !user.email || !user.senha) {
         message = 'Todos os campos são obrigatórios';
         type = 'danger';
-        return res.redirect('/');
+        return res.redirect('/cadastro');
     }
 
     const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
         message = 'Já existe um usuário cadastrado com esse e-mail';
         type = 'danger';
-        return res.redirect('/');
+        return res.redirect('/cadastro');
     }
 
     try {
         await User.create(user);
-        message = 'Usúario cadastrado com sucesso.';
-        type = 'success';
-        return res.redirect('/');
+        message = 'Usuário cadastrado com sucesso';
+        type = 'sucess';
+        return res.redirect('/login');
     }catch (err) {
         res.status(500).send({error: err.message});
     }
@@ -168,7 +168,7 @@ const getALLUsers = async (req, res) => {
             message = ""
         }, 1000);
         const usersList = await User.find();
-        return res.render('index', {
+        return res.render('/telaadm', {
             usersList,
             user: null,
             userDelete: null,
@@ -180,7 +180,56 @@ const getALLUsers = async (req, res) => {
     }
 };
 
+const updateOneUser = async (req, res) => {
+    try {
+        const user = req.body;
+        await user.updateOne({ _id: req.params.id}, user);
+        message = 'Usuario atualizado com sucesso'
+        type = 'success'
+        res.redirect('/telaadm');
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
 
+const deleteOneUser = async (req, res) => {
+    try {
+        await User.deleteOne({ _id: req.params.id});
+        message = 'Usuario deletado com sucesso'
+        type = 'success'
+        res.redirect('/telaadm');
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
+
+const getByIdUser = async (req, res) => {
+    try {
+        const usersList = await User.find();
+        if (req.params.method == 'update') {
+            const user = await User.findOne({_id: req.params.id});
+            res.render('/telaadm', {
+                user,
+                userDelete: null,
+                usersList,
+                message,
+                type
+            });
+        } else {
+            const taskDelete = await User.findOne({_id: req.params.id});
+            res.render('/telaadm', {
+                user: null,
+                userDelete,
+                usersList,
+                message,
+                type
+            });
+        }
+
+    }catch (err) {
+        res.status(500).send({error: err.message});
+    }
+};
 
 module.exports = {
     getALLTasks,
@@ -193,4 +242,7 @@ module.exports = {
     signin,
     logout,
     getALLUsers,
+    updateOneUser,
+    deleteOneUser,
+    getByIdUser,
 };

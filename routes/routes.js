@@ -13,6 +13,12 @@ routes.post('/signin', TaskController.signin);
 routes.get('/logout', TaskController.logout);
 routes.get('/usuarios', TaskController.getALLUsers);
 
+routes.get('/getByIdUser/:id/:method', TaskController.getByIdUser);
+routes.get('/getALLUsers', TaskController.getALLUsers);
+routes.post('/updateOneUser/:id', TaskController.updateOneUser);
+routes.get('/deleteOneUser/:id', TaskController.deleteOneUser);
+
+
 
 
 module.exports = routes

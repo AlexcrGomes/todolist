@@ -13,19 +13,31 @@ app.use(express.urlencoded());
 app.use(routes);
 
 app.get("/telaadm", function(req, res) {
-    res.render(__dirname + "/src/telaadm.ejs");
+    res.render(__dirname + "/src/telaadm.ejs", {
+        message: '',
+        type: ''
+    });
 });
 
 app.get("/login", function(req, res) {
-    res.render(__dirname + "/src/login.ejs");
+    res.render(__dirname + "/src/login.ejs", {
+        message: '',
+        type: ''
+    });
 });
 
 app.get("/cadastro", function(req, res) {
-    res.render(__dirname + "/src/cadastro.ejs");
+    res.render(__dirname + "/src/cadastro.ejs", {
+        message: '',
+        type: ''
+    });
 });
 
 app.get("/tarefas", function(req, res) {
-    res.render(__dirname + "/src/tarefas.ejs");
+    res.render(__dirname + "/src/tarefas.ejs", {
+        message: '',
+        type: ''
+    });
 });
 
 app.listen(port, () => {
