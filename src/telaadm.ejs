@@ -4,52 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <title>Tela adiministrativa</title>
 </head>
 
 <body>
     
-    <% if (message != '') { %>
-        <section class="message message-<%= type %>">
-            <p><%= message %></p>
-            <span id="closeMessage"><i class="bi bi-x"></i></span>
-        </section>
-    <% } %>
-
-    <header>
-
-        <% if (user == null) { %>
-
-            <h1>Listar Usuários</h1>
-            <form action="/getALLUsers" method="post">
-                <button type="submit" id="addButton">Usuários</button>
-            </form>
-
-        <% } else { %>
-
-            <h1>Editar Usuário</h1>
-            <form action="/updateOneUser" method="post">
-                <input type="text" name="task" id="task" value="">
-                <button type="submit" id="updateButton">Update</button>
-                </button>
-            </form>
-
-        <% } %>
-
-            <section id="users">
-                <ul>
-                        <li>
-                            <div>
-                                <a class="btnUpdate" href=""><i class="bi bi-pencil-square"></i></a>
-                                <a class="btnDelete" href=""><i class="bi bi-trash"></i></a>
-                            </div>
-                        </li>
-                </ul>
-            </section>
- 
-
-    </header>
+    tela autenticada
 
 
     <script src="script.js"></script>
