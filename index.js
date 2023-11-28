@@ -31,6 +31,13 @@ app.get("/cadastro", (req, res) => {
   });
 });
 
+app.get("/:_id/telaadm", (req, res) => {
+  res.render(path.join(__dirname, "/src/telaadm.ejs"), {
+    message: "",
+    type: "",
+  });
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });

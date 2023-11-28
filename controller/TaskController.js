@@ -135,28 +135,25 @@ const signin = async (req, res) => {
     if (!email || !senha) {
       return res
         .status(400)
-        .redirect("/login")
-        .send("Por favor, preencha todos os campos obrigatórios.");
+        .redirect("/login");
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (!existingUser) {
       console.log("Usuário não cadastrado");
       return res
         .status(401)
-        .redirect("/login")
-        .send("E-mail não cadastrado. Por favor, realize o cadastro.");
+        .redirect("/login");
     }
-
-    const isPasswordValid = await existingUser.comparePassword(senha);
+    
+    const isPasswordValid = await User.findOne({ senha });
 
     if (!isPasswordValid) {
       console.log("Senha incorreta");
       return res
         .status(401)
         .redirect("/login")
-        .send("Senha ou e-mail incorretos.");
     }
 
     console.log("Login bem-sucedido");
