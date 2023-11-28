@@ -1,5 +1,7 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
+const passport = require('passport');
+
 
 let message = '';
 let type = '';
@@ -152,14 +154,19 @@ const signin = async (req, res) => {
         }
         message = `Bem vindo, ${existingUser.nome.split(' ')[0]}`;
         type = 'success';
-        return res.redirect('/telaadm');
+        return passport.authenticate('local', {
+            successRedirect: '/telaadm',
+            failureRedirect: '/',
+            failureFlash: true
+        })(req, res, '/telaadm');
     }catch (err) {
         res.status(500).send({error: err.message});
     }
 };
 
-const logout = async (req, res) => {
-    
+const logout = (req, res) => {
+    req.logout();
+    res.redirect('/');
 };
 
 const getALLUsers = async (req, res) => {
