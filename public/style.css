@@ -125,3 +125,34 @@ section{
   justify-content: center;
   align-items: center;
 }
+
+.input_senha{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #EAECEF ;
+  padding: 6px;
+  margin-bottom: 16px;
+  border-radius: 0.3rem;
+}
+
+.input_senha img {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.input_senha input {
+  border: none;
+  margin: 0;
+  width: 100%;
+}
+
+.input_senha input:focus{
+  outline: none;
+}
+
+form h2{
+  margin-bottom: 24px;
+  text-align: center;
+}
