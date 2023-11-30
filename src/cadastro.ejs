@@ -94,35 +94,57 @@
         crossorigin="anonymous"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector(".needs-validation");
-            const invalidFeedback = document.getElementById("invalid-feedback");
 
-            form.addEventListener("submit", async function (event) {
-                event.preventDefault();
+            (() => {
+                'use strict'
+
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                const forms = document.querySelectorAll('.needs-validation')
+
+                // Loop over them and prevent submission
+                Array.from(forms).forEach(form => {
+                    form.addEventListener('submit', event => {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            const form = document.querySelector(".needs-validation");
+                            const invalidFeedback = document.getElementById("invalid-feedback");
+
+                            form.addEventListener("submit", async function (event) {
+                                event.preventDefault();
 
 
-                try {
-                    const response = await fetch("/signup", {
-                        method: "POST",
-                        body: new URLSearchParams(new FormData(form)),
-                    });
+                                try {
+                                    const response = await fetch("/signup", {
+                                        method: "POST",
+                                        body: new URLSearchParams(new FormData(form)),
+                                    });
 
-                    const data = await response.json();
+                                    const data = await response.json();
 
-                    if (response.ok) {
-                        // Se a resposta for bem-sucedida, limpe a mensagem de erro
-                        invalidFeedback.innerHTML = "";
-                        alert(data.message); // ou faça algo com a resposta
-                        window.location.href = "/login";
-                    } else {
-                        // Se houver um erro, exiba a mensagem de erro no front-end
-                        invalidFeedback.style.display = "block";
-                        invalidFeedback.innerHTML = data.error;
-                    }
-                } catch (error) {
-                    console.error("Erro ao enviar a solicitação:", error);
-                }
-            });
+                                    if (response.ok) {
+                                        // Se a resposta for bem-sucedida, limpe a mensagem de erro
+                                        invalidFeedback.innerHTML = "";
+                                        alert(data.message); // ou faça algo com a resposta
+                                        window.location.href = "/login";
+                                    } else {
+                                        // Se houver um erro, exiba a mensagem de erro no front-end
+                                        invalidFeedback.style.display = "block";
+                                        invalidFeedback.innerHTML = data.error;
+                                    }
+                                } catch (error) {
+                                    console.error("Erro ao enviar a solicitação:", error);
+                                }
+                            });
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            })()
+
+
+
         });
     </script>
 
