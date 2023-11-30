@@ -4,6 +4,8 @@ const connectToDb = require("./database/db");
 const routes = require("./routes/routes");
 
 connectToDb();
+const User = require("./models/User");
+
 
 const app = express();
 const port = 3000;
@@ -31,11 +33,14 @@ app.get("/cadastro", (req, res) => {
   });
 });
 
-app.get("/:_id/telaadm", (req, res) => {
-  res.render(path.join(__dirname, "/src/telaadm.ejs"), {
-    message: "",
-    type: "",
-  });
+app.get("/:_id/telaadm", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render(path.join(__dirname, "/src/telaadm.ejs"), { users }, (user = null, userDelete = null));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro interno do servidor");
+  }
 });
 
 app.listen(port, () => {

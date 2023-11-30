@@ -1,3 +1,5 @@
+const path = require('path');
+
 const Task = require("../models/Task");
 const User = require("../models/User");
 
@@ -43,26 +45,24 @@ const createTask = async (req, res) => {
 
 const getById = async (req, res) => {
   try {
-    const tasksList = await Task.find();
-    if (req.params.method == "update") {
-      const task = await Task.findOne({ _id: req.params.id });
-      res.render("index", {
-        task,
-        taskDelete: null,
-        tasksList,
-        message,
-        type,
-      });
+    const { id, method } = req.params;
+    const usersList = await User.find();
+
+    let user = null;
+    let userDelete = null;
+
+    if (method === "update") {
+      user = await User.findOne({ _id: id });
     } else {
-      const taskDelete = await Task.findOne({ _id: req.params.id });
-      res.render("index", {
-        task: null,
-        taskDelete,
-        tasksList,
-        message,
-        type,
-      });
+      userDelete = await User.findOne({ _id: id });
     }
+
+    res.render(path.join(__dirname, "../src/telaadm.ejs"), {
+      user,
+      userDelete,
+      usersList,
+      users: usersList,
+    });
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -189,10 +189,8 @@ const getALLUsers = async (req, res) => {
 const updateOneUser = async (req, res) => {
   try {
     const user = req.body;
-    await user.updateOne({ _id: req.params.id }, user);
-    message = "Usuario atualizado com sucesso";
-    type = "success";
-    res.redirect("/telaadm");
+    await User.updateOne({ _id: req.params.id }, user);
+    return res.redirect("/:_id/telaadm");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -200,10 +198,9 @@ const updateOneUser = async (req, res) => {
 
 const deleteOneUser = async (req, res) => {
   try {
+    const user = req.body;
     await User.deleteOne({ _id: req.params.id });
-    message = "Usuario deletado com sucesso";
-    type = "success";
-    res.redirect("/telaadm");
+    res.redirect("/:_id/telaadm");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

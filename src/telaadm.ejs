@@ -4,16 +4,108 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>Tela adiministrativa</title>
+    <title>Tela administrativa</title>
 </head>
 
 <body>
     
-    tela autenticada
+
+    <% if (user == null) { %>
+
+    <% } else { %>
+
+        <form action="/updateOneUser/<%= user._id %>" method="post">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" value="<%= user.nome %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Alterar</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelUpdate()">Cancelar</button>
+        </form>
+
+    <% } %>
+
+    <% if (userDelete != null) { %>
+        <section id="modal">
+            <div id="card">
+                <div id="head">
+                    <h2>Confirmar exclusão</h2>
+                    <a id="close" href="/"><i class="bi bi-x"></i></a>
+                </div>
+                <hr>
+                <p>Deseja realmente excluir o usúario: <%= userDelete.nome %>?</p>
+                <div id="btns">
+                    <a id="btnNot" href="/:_id/telaadm">No</a>
+                    <a id="btnYes" href="/deleteOneUser/<%= userDelete._id %>">Yes</a>
+                </div>
+            </div>
+        </section>
+    <% } %>
+    
+    <h1>Lista de Usuários</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.nome %></td>
+                    <td><%= user.email %></td>
+                    <td>
+                        <a class="btnUpdate" href="/getById/<%= user._id %>/update"><i class="bi bi-pencil-square"></i></a>
+                        <a class="btnDelete" href="/getById/<%= user._id %>/delete"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-success" id="atualizarDados">Atualizar Dados</button>
 
 
-    <script src="script.js"></script>
+    <% if (userDelete != null) { %>
+        <section id="modal">
+            <div id="card">
+                <div id="head">
+                    <h2>Confirmar exclusão</h2>
+                </div>
+                <hr>
+                <p>Deseja realmente excluir o usúario: <%= userDelete.nome %> ?</p>
+                <div id="btns">
+                    <a id="btnNot" href="/:_id/telaadm">No</a>
+                    <a id="btnYes" href="/deleteOneUser/<%= userDelete._id %>">Yes</a>
+                </div>
+            </div>
+        </section>
+    <% } %>
+
+
+
+
+    <script>
+
+        document.getElementById('atualizarDados').addEventListener('click', function() {
+            setTimeout(function() {
+                alert('Dados atualizados!');
+                location.reload();
+            }, 1000);
+        });
+
+        function cancelUpdate() {
+                window.location.href = "/:_id/telaadm";
+            }
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-GLhlTQ8iK1bVBqepJq3Bt6q8+z9FQI5L6aLGrND7Jl13KOMUksLJcC9D2brboS" crossorigin="anonymous"></script>
 </body>
 </html>
