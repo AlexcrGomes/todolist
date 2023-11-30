@@ -104,30 +104,39 @@ const taskCheck = async (req, res) => {
 
 const signup = async (req, res) => {
   const user = req.body;
-
   if (!user.nome || !user.email || !user.senha) {
+    console.log("Campos obrigatórios ausentes");
     return res
       .status(400)
-      .json({ message: "Todos os campos são obrigatórios" });
-  }
-
-  const existingUser = await User.findOne({ email: user.email });
-  if (existingUser) {
-    return res.status(400).json({ message: "Email já esta cadastrado" });
+      .json({ error: "Todos os campos são obrigatórios" });
   }
 
   try {
+    const existingUser = await User.findOne({ email: user.email });
+    if (existingUser) {
+      console.log("Email ja cadastrado");
+      return res
+        .status(400)
+        .json({ error: "Email já está cadastrado" });
+    }
+
     await User.create(user);
+
+    // Redirect on the client side, not here
     return res
       .status(201)
-      .json(
-        { message: "Usuário cadastrado com sucesso" },
-        res.redirect("/login"),
-      );
+      .json({ message: "Usuário cadastrado com sucesso" });
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    // Log the error for debugging purposes
+    console.error(err);
+
+    return res
+      .status(500)
+      .json({ error: "Erro interno do servidor" });
   }
 };
+
+
 
 const signin = async (req, res) => {
   try {
