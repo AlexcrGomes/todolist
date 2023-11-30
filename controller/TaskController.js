@@ -104,8 +104,9 @@ const taskCheck = async (req, res) => {
 
 const signup = async (req, res) => {
   const user = req.body;
-
+  console.log("Dados recebidos:", user);
   if (!user.nome || !user.email || !user.senha) {
+    console.log("Campos obrigatórios ausentes");
     return res
       .status(400)
       .json({ error: "Todos os campos são obrigatórios" });
@@ -114,13 +115,14 @@ const signup = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
+      console.log("Email ja cadastrado");
       return res
         .status(400)
         .json({ error: "Email já está cadastrado" });
     }
 
     await User.create(user);
-    
+
     // Redirect on the client side, not here
     return res
       .status(201)

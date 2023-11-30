@@ -53,7 +53,7 @@
                     </label>
                     <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail"
                         required />
-                    <div id="invalid-feedback"></div>
+                    <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
                 </div>
                 <div class="col-md-12">
                     <label htmlFor="senha" class="form-label">
@@ -93,46 +93,34 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
-        function displayErrorMessage(message) {
-            const errorMessageElement = document.getElementById('invalid-feedback');
-            errorMessageElement.innerHTML = message;
-            errorMessageElement.style.display = 'block';
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector(".needs-validation");
+            const invalidFeedback = document.getElementById("invalid-feedback");
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('.needs-validation');
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
 
-            form.addEventListener('submit', async function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
 
-                form.classList.add('was-validated');
+                try {
+                    const response = await fetch("/signup", {
+                        method: "POST",
+                        body: new URLSearchParams(new FormData(form)),
+                    });
 
-                if (form.checkValidity()) {
-                    const formData = new FormData(form);
+                    const data = await response.json();
 
-                    try {
-                        const response = await fetch('/signup', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams(new FormData(form)),
-                        });
-
-                        const data = await response.json();
-
-                        if (!response.ok) {
-
-                            // Exibir mensagens de erro no frontend
-                            const responseData = await response.json();
-                            displayErrorMessage(responseData.message);
-                        }
-                    } catch (error) {
-                        console.error('Erro ao enviar o formulário:', error);
+                    if (response.ok) {
+                        // Se a resposta for bem-sucedida, limpe a mensagem de erro
+                        invalidFeedback.innerHTML = "";
+                        alert(data.message); // ou faça algo com a resposta
+                        window.location.href = "/login";
+                    } else {
+                        // Se houver um erro, exiba a mensagem de erro no front-end
+                        invalidFeedback.style.display = "block";
+                        invalidFeedback.innerHTML = data.error;
                     }
+                } catch (error) {
+                    console.error("Erro ao enviar a solicitação:", error);
                 }
             });
         });
