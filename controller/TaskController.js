@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 const Task = require("../models/Task");
 const User = require("../models/User");
@@ -106,7 +106,9 @@ const signup = async (req, res) => {
   const user = req.body;
 
   if (!user.nome || !user.email || !user.senha) {
-    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
+    return res
+      .status(400)
+      .json({ message: "Todos os campos são obrigatórios" });
   }
 
   const existingUser = await User.findOne({ email: user.email });
@@ -116,8 +118,12 @@ const signup = async (req, res) => {
 
   try {
     await User.create(user);
-    return res.status(201).json({ message: "Usuário cadastrado com sucesso" }, res.redirect("/login"));
-
+    return res
+      .status(201)
+      .json(
+        { message: "Usuário cadastrado com sucesso" },
+        res.redirect("/login"),
+      );
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
@@ -128,35 +134,26 @@ const signin = async (req, res) => {
     const { email, senha } = req.body;
 
     if (!email || !senha) {
-      return res
-        .status(400)
-        .redirect("/login");
+      return res.status(400).redirect("/login");
     }
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (!existingUser) {
       console.log("Usuário não cadastrado");
-      return res
-        .status(401).json({ error: 'Usuário não cadastrado.' });
-
-
+      return res.status(401).json({ error: "Usuário não cadastrado." });
     }
 
     const isPasswordValid = await User.findOne({ senha });
 
     if (!isPasswordValid) {
       console.log("Senha incorreta");
-      return res
-        .status(401).json({ error: 'Senha Incorreta.' });
-
-
+      return res.status(401).json({ error: "Senha Incorreta." });
     }
 
     console.log("Login bem-sucedido");
     const redirectURL = `/${existingUser._id}/telaadm`;
     return res.status(200).json({ redirect: redirectURL });
-
   } catch (err) {
     console.error(err);
     res.status(500).send({ error: err.message });
