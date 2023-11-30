@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +11,7 @@
 </head>
 
 <body>
-    
+
 
     <header>
         <nav class="navbar ">
@@ -27,23 +28,23 @@
             <div class="row">
                 <div class="login col-12">
                     <form action="/signin" method="post" class="needs-validation">
-                        <h2 >Faça Seu Login</h2>
+                        <h2>Faça Seu Login</h2>
                         <div class="input_senha">
                             <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required />
                         </div>
-                        <div class="invalid-feedback">Por favor, digite um e-mail válido.</div>
+                        <div id="mensagemErro"></div>
                         <div class="input_senha">
-                            <input type="password" name="senha" id="senha" placeholder="Digite sua senha"
-                            required />
-                            <img id="olho" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABDUlEQVQ4jd2SvW3DMBBGbwQVKlyo4BGC4FKFS4+TATKCNxAggkeoSpHSRQbwAB7AA7hQoUKFLH6E2qQQHfgHdpo0yQHX8T3exyPR/ytlQ8kOhgV7FvSx9+xglA3lM3DBgh0LPn/onbJhcQ0bv2SHlgVgQa/suFHVkCg7bm5gzB2OyvjlDFdDcoa19etZMN8Qp7oUDPEM2KFV1ZAQO2zPMBERO7Ra4JQNpRa4K4FDS0R0IdneCbQLb4/zh/c7QdH4NL40tPXrovFpjHQr6PJ6yr5hQV80PiUiIm1OKxZ0LICS8TWvpyyOf2DBQQtcXk8Zi3+JcKfNafVsjZ0WfGgJlZZQxZjdwzX+ykf6u/UF0Fwo5Apfcq8AAAAASUVORK5CYII="
-/>
+                            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required />
+                            <img id="olho"
+                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABDUlEQVQ4jd2SvW3DMBBGbwQVKlyo4BGC4FKFS4+TATKCNxAggkeoSpHSRQbwAB7AA7hQoUKFLH6E2qQQHfgHdpo0yQHX8T3exyPR/ytlQ8kOhgV7FvSx9+xglA3lM3DBgh0LPn/onbJhcQ0bv2SHlgVgQa/suFHVkCg7bm5gzB2OyvjlDFdDcoa19etZMN8Qp7oUDPEM2KFV1ZAQO2zPMBERO7Ra4JQNpRa4K4FDS0R0IdneCbQLb4/zh/c7QdH4NL40tPXrovFpjHQr6PJ6yr5hQV80PiUiIm1OKxZ0LICS8TWvpyyOf2DBQQtcXk8Zi3+JcKfNafVsjZ0WfGgJlZZQxZjdwzX+ykf6u/UF0Fwo5Apfcq8AAAAASUVORK5CYII=" />
                         </div>
-                        <div class="valid-feedback">Tudo certo!</div>
+                        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
                         <button id="addButton" class="btn btn-danger w-100" type="submit">
                             Login
                         </button>
                         <div class="terms">
-                            <p>Ao continuar você está concordando com os <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a></p>
+                            <p>Ao continuar você está concordando com os <a href="#">Termos de Serviço</a> e <a
+                                    href="#">Política de Privacidade</a></p>
                         </div>
                         <div class="noAccount">
                             <p>Não tem uma conta? <a href="#"> Cadastre-se</a></p>
@@ -59,39 +60,57 @@
         crossorigin="anonymous"></script>
     <script>
         var senha = $('#senha');
-        var olho= $("#olho");
+        var olho = $("#olho");
 
-        olho.mousedown(function() {
-        senha.attr("type", "text");
+        olho.mousedown(function () {
+            senha.attr("type", "text");
         });
 
-        olho.mouseup(function() {
-        senha.attr("type", "password");
+        olho.mouseup(function () {
+            senha.attr("type", "password");
         });
         // para evitar o problema de arrastar a imagem e a senha continuar exposta, 
-        $( "#olho" ).mouseout(function() { 
-        $("#senha").attr("type", "password");
+        $("#olho").mouseout(function () {
+            $("#senha").attr("type", "password");
         });
 
-        (() => {
-            'use strict'
+        function displayErrorMessage(message) {
+            const errorMessageElement = document.getElementById('errorMessage');
+            errorMessageElement.textContent = message;
+            errorMessageElement.style.display = 'block';
+        }
 
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.querySelectorAll('.needs-validation')
 
-            // Loop over them and prevent submission
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
+
+        // Código para manipular o envio do formulário (você pode ajustar isso conforme necessário)
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+
+                try {
+                    const response = await fetch('/signin', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams(new FormData(form)),
+                    });
+
+                    if (!response.ok) {
+                        // Exibir mensagem de erro no frontend
+                        const responseData = await response.json();
+                        displayErrorMessage(responseData.error);
                     }
+                } catch (error) {
+                    console.error('Erro na requisição:', error);
+                }
+            });
+        });
 
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
     </script>
 
 </body>
+
 </html>

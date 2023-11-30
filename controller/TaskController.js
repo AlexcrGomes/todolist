@@ -141,23 +141,25 @@ const signin = async (req, res) => {
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (!existingUser) {
-      console.log("Usuário não cadastrado");
       return res
-        .status(401)
-        .redirect("/login");
+        .status(401).json({ error: 'Usuário não cadastrado.' });
+
+
     }
-    
+
     const isPasswordValid = await User.findOne({ senha });
 
     if (!isPasswordValid) {
-      console.log("Senha incorreta");
       return res
-        .status(401)
-        .redirect("/login")
+        .status(401).json({ error: 'Senha Incorreta.' });
+
+
     }
 
     console.log("Login bem-sucedido");
-    return res.redirect(`/${existingUser._id}/telaadm`);
+    console.log("UserID:", existingUser._id);
+    return res
+      .redirect(`/${existingUser._id}/telaadm`);
   } catch (err) {
     console.error(err);
     return res.status(500).send({ error: "Erro interno do servidor." });
