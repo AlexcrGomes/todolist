@@ -104,7 +104,6 @@ const taskCheck = async (req, res) => {
 
 const signup = async (req, res) => {
   const user = req.body;
-  console.log("Dados recebidos:", user);
   if (!user.nome || !user.email || !user.senha) {
     console.log("Campos obrigatórios ausentes");
     return res
