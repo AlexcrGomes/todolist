@@ -53,7 +53,7 @@
                     </label>
                     <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail"
                         required />
-                    <div class="invalid-feedback">Por favor, digite um e-mail válido.</div>
+                    <div id="invalid-feedback"></div>
                 </div>
                 <div class="col-md-12">
                     <label htmlFor="senha" class="form-label">
@@ -87,42 +87,57 @@
 
 
 
-    <script>
-        const closeMessage = document.querySelector('#closeMessage');
-        const message = document.querySelector('.message');
 
-        closeMessage.addEventListener('click', () => {
-            message.style.display = 'none';
-        });
-
-        setTimeout(() => {
-            message.style.display = 'none';
-        }, 5000);
-    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script>
-        (() => {
-            'use strict'
+        function displayErrorMessage(message) {
+            const errorMessageElement = document.getElementById('invalid-feedback');
+            errorMessageElement.innerHTML = message;
+            errorMessageElement.style.display = 'block';
+        }
 
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.querySelectorAll('.needs-validation')
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('.needs-validation');
 
-            // Loop over them and prevent submission
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
+            form.addEventListener('submit', async function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+
+                if (form.checkValidity()) {
+                    const formData = new FormData(form);
+
+                    try {
+                        const response = await fetch('/signup', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams(new FormData(form)),
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+
+                            // Exibir mensagens de erro no frontend
+                            const responseData = await response.json();
+                            displayErrorMessage(responseData.message);
+                        }
+                    } catch (error) {
+                        console.error('Erro ao enviar o formulário:', error);
                     }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
+                }
+            });
+        });
     </script>
+
 </body>
 
 </html>

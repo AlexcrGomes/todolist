@@ -106,25 +106,20 @@ const signup = async (req, res) => {
   const user = req.body;
 
   if (!user.nome || !user.email || !user.senha) {
-    message = "Todos os campos são obrigatórios";
-    type = "danger";
-    return res.redirect("/cadastro");
+    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
   }
 
   const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
-    message = "Já existe um usuário cadastrado com esse e-mail";
-    type = "danger";
-    return res.redirect("/cadastro");
+    return res.status(400).json({ message: "Email já esta cadastrado" });
   }
 
   try {
     await User.create(user);
-    message = "Usuário cadastrado com sucesso";
-    type = "sucess";
-    return res.redirect("/login");
+    return res.status(201).json({ message: "Usuário cadastrado com sucesso" }, res.redirect("/login"));
+
   } catch (err) {
-    res.status(500).send({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
@@ -141,6 +136,7 @@ const signin = async (req, res) => {
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (!existingUser) {
+      console.log("Usuário não cadastrado");
       return res
         .status(401).json({ error: 'Usuário não cadastrado.' });
 
@@ -150,6 +146,7 @@ const signin = async (req, res) => {
     const isPasswordValid = await User.findOne({ senha });
 
     if (!isPasswordValid) {
+      console.log("Senha incorreta");
       return res
         .status(401).json({ error: 'Senha Incorreta.' });
 
@@ -157,12 +154,12 @@ const signin = async (req, res) => {
     }
 
     console.log("Login bem-sucedido");
-    console.log("UserID:", existingUser._id);
-    return res
-      .redirect(`/${existingUser._id}/telaadm`);
+    const redirectURL = `/${existingUser._id}/telaadm`;
+    return res.status(200).json({ redirect: redirectURL });
+
   } catch (err) {
     console.error(err);
-    return res.status(500).send({ error: "Erro interno do servidor." });
+    res.status(500).send({ error: err.message });
   }
 };
 

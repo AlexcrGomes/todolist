@@ -47,7 +47,7 @@
                                     href="#">Política de Privacidade</a></p>
                         </div>
                         <div class="noAccount">
-                            <p>Não tem uma conta? <a href="#"> Cadastre-se</a></p>
+                            <p>Não tem uma conta? <a href="/cadastro"> Cadastre-se</a></p>
                         </div>
                     </form>
                 </div>
@@ -81,33 +81,35 @@
         }
 
 
+        function redirectToURL(url) {
+            window.location.href = url;
+        }
+        const form = document.querySelector('form');
 
-        // Código para manipular o envio do formulário (você pode ajustar isso conforme necessário)
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('form');
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
 
-            form.addEventListener('submit', async function (event) {
-                event.preventDefault();
+            try {
+                const response = await fetch('/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(new FormData(form)),
+                });
 
-                try {
-                    const response = await fetch('/signin', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams(new FormData(form)),
-                    });
-
-                    if (!response.ok) {
-                        // Exibir mensagem de erro no frontend
-                        const responseData = await response.json();
-                        displayErrorMessage(responseData.error);
-                    }
-                } catch (error) {
-                    console.error('Erro na requisição:', error);
+                if (response.ok) {
+                    const responseData = await response.json();
+                    redirectToURL(responseData.redirect);
+                } else {
+                    const responseData = await response.json();
+                    displayErrorMessage(responseData.error);
                 }
-            });
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+            }
         });
+
 
     </script>
 
