@@ -1,4 +1,5 @@
 const path = require("path");
+const bcrypt = require('bcrypt');
 
 const Task = require("../models/Task");
 const User = require("../models/User");
@@ -104,39 +105,36 @@ const taskCheck = async (req, res) => {
 
 const signup = async (req, res) => {
   const user = req.body;
+
   if (!user.nome || !user.email || !user.senha) {
-    console.log("Campos obrigatórios ausentes");
     return res
       .status(400)
-      .json({ error: "Todos os campos são obrigatórios" });
+      .json({ message: "Todos os campos são obrigatórios" });
+  }
+
+  const existingUser = await User.findOne({ email: user.email });
+  if (existingUser) {
+    return res.status(400).json({ message: "Email já esta cadastrado" });
   }
 
   try {
-    const existingUser = await User.findOne({ email: user.email });
-    if (existingUser) {
-      console.log("Email ja cadastrado");
-      return res
-        .status(400)
-        .json({ error: "Email já está cadastrado" });
-    }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(user.senha, saltRounds);
+
+    // Substitua a senha original pela senha criptografada antes de criar o usuário
+    user.senha = hashedPassword;
 
     await User.create(user);
-
-    // Redirect on the client side, not here
     return res
       .status(201)
-      .json({ message: "Usuário cadastrado com sucesso" });
+      .json(
+        { message: "Usuário cadastrado com sucesso" },
+        res.redirect("/login"),
+      );
   } catch (err) {
-    // Log the error for debugging purposes
-    console.error(err);
-
-    return res
-      .status(500)
-      .json({ error: "Erro interno do servidor" });
+    return res.status(500).json({ error: err.message });
   }
 };
-
-
 
 const signin = async (req, res) => {
   try {
@@ -153,7 +151,7 @@ const signin = async (req, res) => {
       return res.status(401).json({ error: "Usuário não cadastrado." });
     }
 
-    const isPasswordValid = await User.findOne({ senha });
+    const isPasswordValid = await bcrypt.compare(senha, existingUser.senha);
 
     if (!isPasswordValid) {
       console.log("Senha incorreta");
