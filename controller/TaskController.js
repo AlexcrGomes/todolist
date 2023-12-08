@@ -1,5 +1,5 @@
 const path = require("path");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const Task = require("../models/Task");
 const User = require("../models/User");
@@ -7,42 +7,7 @@ const User = require("../models/User");
 let message = "";
 let type = "";
 
-const getALLTasks = async (req, res) => {
-  try {
-    setTimeout(() => {
-      message = "";
-    }, 1000);
-    const tasksList = await Task.find();
-    return res.render("index", {
-      tasksList,
-      task: null,
-      taskDelete: null,
-      message,
-      type,
-    });
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
-
-const createTask = async (req, res) => {
-  const task = req.body;
-
-  if (!task.task) {
-    message = "Please enter a task";
-    type = "danger";
-    return res.redirect("/");
-  }
-
-  try {
-    await Task.create(task);
-    message = "Task created successfully";
-    type = "success";
-    return res.redirect("/");
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
+// Controller Users
 
 const getById = async (req, res) => {
   try {
@@ -69,81 +34,36 @@ const getById = async (req, res) => {
   }
 };
 
-const updateOneTask = async (req, res) => {
-  try {
-    const task = req.body;
-    await Task.updateOne({ _id: req.params.id }, task);
-    message = "Task updated successfully";
-    type = "success";
-    res.redirect("/");
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
-
-const deleteOneTask = async (req, res) => {
-  try {
-    await Task.deleteOne({ _id: req.params.id });
-    message = "Task deleted successfully";
-    type = "success";
-    res.redirect("/");
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
-
-const taskCheck = async (req, res) => {
-  try {
-    const task = await Task.findOne({ _id: req.params.id });
-    task.check ? (task.check = false) : (task.check = true);
-    await Task.updateOne({ _id: req.params.id }, task);
-    res.redirect("/");
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-};
-
 const signup = async (req, res) => {
   const user = req.body;
   if (!user.nome || !user.email || !user.senha) {
     console.log("Campos obrigatórios ausentes");
-    return res
-      .status(400)
-      .json({ error: "Todos os campos são obrigatórios" });
+    return res.status(400).json({ error: "Todos os campos são obrigatórios" });
   }
 
   try {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(user.senha, saltRounds);
-  
+
     // Substitua a senha original pela senha criptografada antes de criar o usuário
     user.senha = hashedPassword;
     const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
       console.log("Email ja cadastrado");
-      return res
-        .status(400)
-        .json({ error: "Email já está cadastrado" });
+      return res.status(400).json({ error: "Email já está cadastrado" });
     }
 
     await User.create(user);
 
     // Redirect on the client side, not here
-    return res
-      .status(201)
-      .json({ message: "Usuário cadastrado com sucesso" });
-      
+    return res.status(201).json({ message: "Usuário cadastrado com sucesso" });
   } catch (err) {
     // Log the error for debugging purposes
     console.error(err);
 
-    return res
-      .status(500)
-      .json({ error: "Erro interno do servidor" });
+    return res.status(500).json({ error: "Erro interno do servidor" });
   }
 };
-
-
 
 const signin = async (req, res) => {
   try {
@@ -240,6 +160,79 @@ const getByIdUser = async (req, res) => {
         type,
       });
     }
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
+// Controller Tasks
+
+const getALLTasks = async (req, res) => {
+  try {
+    setTimeout(() => {
+      message = "";
+    }, 1000);
+    const tasksList = await Task.find();
+    return res.render("index", {
+      tasksList,
+      task: null,
+      taskDelete: null,
+      message,
+      type,
+    });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
+const createTask = async (req, res) => {
+  const task = req.body;
+
+  if (!task.task) {
+    message = "Please enter a task";
+    type = "danger";
+    return res.redirect("/");
+  }
+
+  try {
+    await Task.create(task);
+    message = "Task created successfully";
+    type = "success";
+    return res.redirect("/");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
+const updateOneTask = async (req, res) => {
+  try {
+    const task = req.body;
+    await Task.updateOne({ _id: req.params.id }, task);
+    message = "Task updated successfully";
+    type = "success";
+    res.redirect("/");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
+const deleteOneTask = async (req, res) => {
+  try {
+    await Task.deleteOne({ _id: req.params.id });
+    message = "Task deleted successfully";
+    type = "success";
+    res.redirect("/");
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+};
+
+const taskCheck = async (req, res) => {
+  try {
+    const task = await Task.findOne({ _id: req.params.id });
+    task.check ? (task.check = false) : (task.check = true);
+    await Task.updateOne({ _id: req.params.id }, task);
+    res.redirect("/");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

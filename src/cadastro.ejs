@@ -7,16 +7,19 @@
     <link rel="stylesheet" href="/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+    </style>
     <title>Lista de Atividades</title>
 </head>
 
-<body>
+<body style="font-family: Roboto;">
 
     <header>
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg bg-rgb" style="background-color: rgb(66, 178, 235);">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <h1>LOGO</h1>
+                <a class="navbar-brand">
+                    <img src="../public/img/logo.png" alt="Logo" width="30" height="24">
                 </a>
                 <button class="navbar-toggler shadow-sm" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
@@ -26,10 +29,8 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" id="login" href="/login">LOGIN</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-danger" id="cadastro" href="/">HOME</a>
+                            <a class="btn btn-outline-light" id="login" href="/login">LOGIN</a>
+                            <a class="btn btn-outline-light" id="home" href="/">HOME</a>
                         </li>
                     </ul>
                 </div>
@@ -37,49 +38,58 @@
         </nav>
     </header>
 
-    <div class="form-cadastro">
-        <div class="container">
-            <form action="/signup" method="post" class="row g-3 needs-validation" noValidate>
-                <div class="col-md-12">
-                    <label htmlFor="nome" class="form-label">
-                        Nome Completo
-                    </label>
-                    <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" required />
-                    <div class="valid-feedback">Tudo certo!</div>
-                </div>
-                <div class="col-md-12">
-                    <label htmlFor="email" class="form-label">
-                        E-mail
-                    </label>
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail"
-                        required />
-                    <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
-                </div>
-                <div class="col-md-12">
-                    <label htmlFor="senha" class="form-label">
-                        Senha
-                    </label>
-                    <input type="password" class="form-control" name="senha" id="senha" placeholder="Digite sua senha"
-                        required />
-                    <div class="valid-feedback">Tudo certo!</div>
-                </div>
-                <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" defaultValue="" id="invalidCheck" required />
-                        <label class="form-check-label" htmlFor="invalidCheck">
-                            Aceito os termos e condições
+    <section>
+        <div class="form-cadastro">
+            <div class="container">
+                <form action="/signup" method="post" class="row g-3 needs-validation" noValidate>
+                    <div class="col-md-12">
+                        <label htmlFor="nome" class="form-label">
+                            Nome Completo
                         </label>
-                        <div class="invalid-feedback">Você precisa aceitar antes de continuar.</div>
+                        <input type="text" class="form-control" name="nome" id="nome" placeholder="Nome" required />
+                        <div class="valid-feedback">Tudo certo!</div>
                     </div>
-                </div>
-                <div class="col-12">
-                    <button id="addButton" class="btn btn-danger" type="submit">
-                        Cadastrar
-                    </button>
-                </div>
-            </form>
+                    <div class="col-md-12">
+                        <label htmlFor="email" class="form-label">
+                            E-mail
+                        </label>
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail"
+                            required />
+                        <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <label htmlFor="senha" class="form-label">
+                            Senha
+                        </label>
+                        <input type="password" class="form-control" name="senha" id="senha" placeholder="Digite sua senha"
+                            required />
+                        <div class="valid-feedback">Tudo certo!</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" defaultValue="" id="invalidCheck" required />
+                            <label class="form-check-label" htmlFor="invalidCheck">
+                                Aceito os termos e condições
+                            </label>
+                            <div class="invalid-feedback">Você precisa aceitar antes de continuar.</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button id="addButton" class="btn btn-primary" type="submit">
+                            Cadastrar
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <section>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+          </div>
+    </section>
 
 
 
