@@ -33,6 +33,16 @@ app.get("/cadastro", (req, res) => {
   });
 });
 
+app.get("/:_id/tarefas", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render(path.join(__dirname, "/src/tarefas.ejs"), { users }, (user = null, userDelete = null));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro interno do servidor");
+  }
+});
+
 app.get("/:_id/telaadm", async (req, res) => {
   try {
     const users = await User.find();

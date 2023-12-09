@@ -15,45 +15,53 @@
 
 <body style="font-family: Roboto;">
 
-
     <header>
-        <nav class="navbar ">
-            <div class="container">
-                <a class="navbar-brand" href="/">
-                    <h1>LOGO</h1>
-                </a>
+        <nav class="navbar navbar-expand-lg bg-rgb" style="background-color: rgb(66, 178, 235);">
+            <div class="container-fluid">
+                <button class="navbar-toggler shadow-sm" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light" id="login" href="/cadastro">CRIE SUA CONTA</a>
+                            <a class="btn btn-outline-light" id="home" href="/">HOME</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
 
     <section>
-        <div class="container">
-            <div class="row">
-                <div class="login col-12">
-                    <form action="/signin" method="post" class="needs-validation">
-                        <h2>Faça Seu Login</h2>
-                        <div class="input_senha">
-                            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required />
-                        </div>
-                        <div id="mensagemErro"></div>
-                        <div class="input_senha">
-                            <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required />
-                            <img id="olho"
-                                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABDUlEQVQ4jd2SvW3DMBBGbwQVKlyo4BGC4FKFS4+TATKCNxAggkeoSpHSRQbwAB7AA7hQoUKFLH6E2qQQHfgHdpo0yQHX8T3exyPR/ytlQ8kOhgV7FvSx9+xglA3lM3DBgh0LPn/onbJhcQ0bv2SHlgVgQa/suFHVkCg7bm5gzB2OyvjlDFdDcoa19etZMN8Qp7oUDPEM2KFV1ZAQO2zPMBERO7Ra4JQNpRa4K4FDS0R0IdneCbQLb4/zh/c7QdH4NL40tPXrovFpjHQr6PJ6yr5hQV80PiUiIm1OKxZ0LICS8TWvpyyOf2DBQQtcXk8Zi3+JcKfNafVsjZ0WfGgJlZZQxZjdwzX+ykf6u/UF0Fwo5Apfcq8AAAAASUVORK5CYII=" />
-                        </div>
-                        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
-                        <button id="addButton" class="btn btn-primary w-50" type="submit">
+        <div class="form-cadastro">
+            <div class="container">
+                <form action="/signin" method="post" class="row g-3 needs-validation" noValidate>
+                    <h2>Faça Seu Login</h2>
+
+                    <div class="col-md-12">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail" required />
+                            <div class="invalid-feedback">Este campo deve ser preenchido.</div>
+                        <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="password" class="form-control" name="senha" id="senha" placeholder="Digite sua senha" required />
+                        <div class="invalid-feedback">Este campo deve ser preenchido.</div>
+                        <img id="olho"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABDUlEQVQ4jd2SvW3DMBBGbwQVKlyo4BGC4FKFS4+TATKCNxAggkeoSpHSRQbwAB7AA7hQoUKFLH6E2qQQHfgHdpo0yQHX8T3exyPR/ytlQ8kOhgV7FvSx9+xglA3lM3DBgh0LPn/onbJhcQ0bv2SHlgVgQa/suFHVkCg7bm5gzB2OyvjlDFdDcoa19etZMN8Qp7oUDPEM2KFV1ZAQO2zPMBERO7Ra4JQNpRa4K4FDS0R0IdneCbQLb4/zh/c7QdH4NL40tPXrovFpjHQr6PJ6yr5hQV80PiUiIm1OKxZ0LICS8TWvpyyOf2DBQQtcXk8Zi3+JcKfNafVsjZ0WfGgJlZZQxZjdwzX+ykf6u/UF0Fwo5Apfcq8AAAAASUVORK5CYII=" />
+                    </div>
+                    <div class="col-12">
+                        <button id="addButton" class="btn btn-primary" type="submit">
                             Login
                         </button>
-                        <div class="terms">
-                            <p>Ao continuar você está concordando com os <a href="#">Termos de Serviço</a> e <a
-                                    href="#">Política de Privacidade</a></p>
-                        </div>
-                        <div class="noAccount">
-                            <p>Não tem uma conta? <a href="/cadastro"> Cadastre-se</a></p>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="noAccount">
+                        <hr>
+                        <p>Não tem uma conta? <a href="/cadastro"> Cadastre-se</a></p>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -73,48 +81,64 @@
         olho.mouseup(function () {
             senha.attr("type", "password");
         });
-        // para evitar o problema de arrastar a imagem e a senha continuar exposta, 
         $("#olho").mouseout(function () {
             $("#senha").attr("type", "password");
         });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-        function displayErrorMessage(message) {
-            const errorMessageElement = document.getElementById('errorMessage');
-            errorMessageElement.textContent = message;
-            errorMessageElement.style.display = 'block';
-        }
+            (() => {
+                'use strict'
+
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                const forms = document.querySelectorAll('.needs-validation')
+
+                // Loop over them and prevent submission
+                Array.from(forms).forEach(form => {
+                    form.addEventListener('submit', event => {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            const form = document.querySelector(".needs-validation");
+                            const invalidFeedback = document.getElementById("invalid-feedback");
+
+                            form.addEventListener("submit", async function (event) {
+                                event.preventDefault();
 
 
-        function redirectToURL(url) {
-            window.location.href = url;
-        }
-        const form = document.querySelector('form');
+                                try {
+                                    const response = await fetch("/signin", {
+                                        method: "POST",
+                                        body: new URLSearchParams(new FormData(form)),
+                                    });
 
-        form.addEventListener('submit', async function (event) {
-            event.preventDefault();
+                                    const data = await response.json();
 
-            try {
-                const response = await fetch('/signin', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(new FormData(form)),
-                });
+                                    if (response.ok) {
+                                        // Se a resposta for bem-sucedida, limpe a mensagem de erro
+                                        invalidFeedback.innerHTML = "";
+                                        alert(data.message); // ou faça algo com a resposta
+                                        window.location.href = "/:_id/tarefas";
+                                    } else {
+                                        // Se houver um erro, exiba a mensagem de erro no front-end
+                                        invalidFeedback.style.display = "block";
+                                        invalidFeedback.innerHTML = data.error;
+                                    }
+                                } catch (error) {
+                                    console.error("Erro ao enviar a solicitação:", error);
+                                }
+                            });
+                        }
 
-                if (response.ok) {
-                    const responseData = await response.json();
-                    redirectToURL(responseData.redirect);
-                } else {
-                    const responseData = await response.json();
-                    displayErrorMessage(responseData.error);
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-            }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            })()
+
+
+
         });
-
-
     </script>
 
 </body>
