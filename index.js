@@ -36,7 +36,7 @@ app.get("/cadastro", (req, res) => {
 app.get("/:_id/tarefas", async (req, res) => {
   try {
     const users = await User.find();
-    res.render(path.join(__dirname, "/src/tarefas.ejs"), { users }, (user = null, userDelete = null));
+    res.render(path.join(__dirname, "/src/tarefas.ejs"), { users }, (user = null, userDelete = null, message = null));
   } catch (error) {
     console.error(error);
     res.status(500).send("Erro interno do servidor");

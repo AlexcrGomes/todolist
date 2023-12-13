@@ -35,35 +35,54 @@ const getById = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const user = req.body;
-  if (!user.nome || !user.email || !user.senha) {
-    console.log("Campos obrigatórios ausentes");
-    return res.status(400).json({ error: "Todos os campos são obrigatórios" });
-  }
+  const {nome, email, senha,senhaconfirmacao} = req.body
 
-  try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(user.senha, saltRounds);
-
-    // Substitua a senha original pela senha criptografada antes de criar o usuário
-    user.senha = hashedPassword;
-    const existingUser = await User.findOne({ email: user.email });
-    if (existingUser) {
-      console.log("Email ja cadastrado");
-      return res.status(400).json({ error: "Email já está cadastrado" });
+    // Validations
+    if (!nome) {
+        return res.status(422).json({ msg: 'O nome é obrigatorio!' })
+    }
+    if (!email) {
+        return res.status(422).json({ msg: 'O email é obrigatorio!' })
+    }
+    if (!senha) {
+        return res.status(422).json({ msg: 'A senha é obrigatoria!' })
+    }
+    if (!senhaconfirmacao) {
+        return res.status(422).json({ msg: 'Confirme a senha!' })
+    }
+    if (senha !== senhaconfirmacao) {
+        return res.status(422).json({ msg: 'As senhas não são iguais!' })
     }
 
-    await User.create(user);
+    // Check if user exists
+    const userExists = await User.findOne({ email: email})
 
-    // Redirect on the client side, not here
-    return res.status(201).json({ message: "Usuário cadastrado com sucesso" });
-  } catch (err) {
-    // Log the error for debugging purposes
-    console.error(err);
+    if (userExists) {
+      return res.status(422).json({ msg: 'Usuário já cadastrado' })
+    }
 
-    return res.status(500).json({ error: "Erro interno do servidor" });
+    // Create password
+    const salt = await bcrypt.genSalt(12);
+    const passwordHash = await bcrypt.hash(senha, salt);
+
+    // Create User
+    const user = new User({
+      nome,
+      email,
+      senha: passwordHash,
+    })
+
+    try {
+      await user.save();
+      return res.status(201).json({ msg: "Usuário criado com sucesso!" })
+    }
+    catch (err) {
+      console.log(err);
+      return res.status(500).json({ msg: "Aconteceu um erro no servidor, tente mais tarde"});
   }
+
 };
+    
 
 const signin = async (req, res) => {
   try {
@@ -169,11 +188,8 @@ const getByIdUser = async (req, res) => {
 
 const getALLTasks = async (req, res) => {
   try {
-    setTimeout(() => {
-      message = "";
-    }, 1000);
     const tasksList = await Task.find();
-    return res.render("index", {
+    return res.render("/:_id/tarefas", {
       tasksList,
       task: null,
       taskDelete: null,
@@ -189,16 +205,16 @@ const createTask = async (req, res) => {
   const task = req.body;
 
   if (!task.task) {
-    message = "Please enter a task";
+    message = "Escreva uma tarefa";
     type = "danger";
-    return res.redirect("/");
+    return res.redirect("/:_id/tarefas");
   }
 
   try {
     await Task.create(task);
-    message = "Task created successfully";
+    message = "Tarefa criada";
     type = "success";
-    return res.redirect("/");
+    return res.redirect("/:_id/tarefas");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -208,9 +224,9 @@ const updateOneTask = async (req, res) => {
   try {
     const task = req.body;
     await Task.updateOne({ _id: req.params.id }, task);
-    message = "Task updated successfully";
+    message = "Tarefa alterada";
     type = "success";
-    res.redirect("/");
+    res.redirect("/:_id/tarefas");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -219,9 +235,9 @@ const updateOneTask = async (req, res) => {
 const deleteOneTask = async (req, res) => {
   try {
     await Task.deleteOne({ _id: req.params.id });
-    message = "Task deleted successfully";
+    message = "Tarefa excluida";
     type = "success";
-    res.redirect("/");
+    res.redirect("/:_id/tarefas");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }
@@ -232,7 +248,7 @@ const taskCheck = async (req, res) => {
     const task = await Task.findOne({ _id: req.params.id });
     task.check ? (task.check = false) : (task.check = true);
     await Task.updateOne({ _id: req.params.id }, task);
-    res.redirect("/");
+    res.redirect("/:_id/tarefas");
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

@@ -13,7 +13,7 @@
     <title>Lista de Atividades</title>
 </head>
 
-<body style="font-family: Roboto;">
+<body style="font-family: Roboto;" class="header finisher-header">
 
     <header>
         <nav class="navbar navbar-expand-lg bg-rgb" style="background-color: rgb(66, 178, 235);">
@@ -38,7 +38,7 @@
     <section>
         <div class="form-cadastro">
             <div class="container">
-                <form action="/signup" method="post" class="row g-3 needs-validation" noValidate>
+                <form id="signupForm" action="/signup" method="post" class="row g-3 needs-validation" noValidate style="background-color: rgba(255, 255, 255, 0.5); margin-top: 10rem;">
                     <div class="col-md-12">
                         <label htmlFor="nome" class="form-label">
                             Nome:
@@ -52,8 +52,7 @@
                         </label>
                         <input type="email" class="form-control" name="email" id="email" placeholder="Digite seu e-mail"
                             required />
-                            <div class="invalid-feedback">Este campo deve ser preenchido.</div>
-                        <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
+                        <div class="invalid-feedback">Este campo deve ser preenchido.</div>
                     </div>
                     <div class="col-md-12">
                         <label htmlFor="senha" class="form-label">
@@ -63,19 +62,19 @@
                             required />
                         <div class="invalid-feedback">Este campo deve ser preenchido.</div>
                     </div>
-                    <div class="col-12">
-                        <div class="form-check">
-                            <input type="checkbox" defaultValue="" id="invalidCheck" required />
-                            <label htmlFor="invalidCheck">
-                                Aceito os termos e condições
-                            </label>
-                            <div class="invalid-feedback">Você precisa aceitar antes de continuar.</div>
-                        </div>
+                    <div class="col-md-12">
+                        <label htmlFor="senha" class="form-label">
+                            Confirme a senha:
+                        </label>
+                        <input type="password" class="form-control" name="senhaconfirmacao" id="senhaconfirmacao" placeholder="Confirme a senha"
+                            required />
+                        <div class="invalid-feedback">Este campo deve ser preenchido.</div>
                     </div>
                     <div class="col-12">
-                        <button id="addButton" class="btn btn-primary" type="submit">
+                        <button id="liveAlertBtn" class="btn btn-primary" type="submit">
                             Cadastrar
                         </button>
+                        <div class="alert alert-danger" style="display: none;" id="invalid-feedback"></div>
                     </div>
                 </form>
             </div>
@@ -85,60 +84,92 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+    </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        
+        document.addEventListener("DOMContentLoaded", function init() {
+            'use strict';
 
-            (() => {
-                'use strict'
+            const signupForm = document.getElementById("signupForm");
+            const invalidFeedback = document.getElementById("invalid-feedback");
+            const forms = document.querySelectorAll('.needs-validation');
 
-                // Fetch all the forms we want to apply custom Bootstrap validation styles to
-                const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(addFormSubmitListener);
 
-                // Loop over them and prevent submission
-                Array.from(forms).forEach(form => {
-                    form.addEventListener('submit', event => {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                            const form = document.querySelector(".needs-validation");
-                            const invalidFeedback = document.getElementById("invalid-feedback");
-
-                            form.addEventListener("submit", async function (event) {
-                                event.preventDefault();
-
-
-                                try {
-                                    const response = await fetch("/signup", {
-                                        method: "POST",
-                                        body: new URLSearchParams(new FormData(form)),
-                                    });
-
-                                    const data = await response.json();
-
-                                    if (response.ok) {
-                                        // Se a resposta for bem-sucedida, limpe a mensagem de erro
-                                        invalidFeedback.innerHTML = "";
-                                        alert(data.message); // ou faça algo com a resposta
-                                        window.location.href = "/login";
-                                    } else {
-                                        // Se houver um erro, exiba a mensagem de erro no front-end
-                                        invalidFeedback.style.display = "block";
-                                        invalidFeedback.innerHTML = data.error;
-                                    }
-                                } catch (error) {
-                                    console.error("Erro ao enviar a solicitação:", error);
-                                }
+            function addFormSubmitListener(form) {
+                form.addEventListener('submit', async function handleSubmit(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        try {
+                            const response = await fetch("/signup", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    nome: signupForm.nome.value,
+                                    email: signupForm.email.value,
+                                    senha: signupForm.senha.value,
+                                    senhaconfirmacao: signupForm.senhaconfirmacao.value
+                                })
                             });
+
+                            const result = await response.json();
+
+                            invalidFeedback.style.display = "block";
+                            invalidFeedback.className = response.ok ? "alert alert-info" : "alert alert-danger";
+                            invalidFeedback.innerText = result.msg;
+                        } catch (error) {
+                            console.error("Erro ao enviar a solicitação:", error);
                         }
+                    }
 
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-            })()
+                    form.classList.add('was-validated');
+                }, false);
+            }
+        });
 
 
-
+    </script>
+    <script src="finisher-header.es5.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        new FinisherHeader({
+            "count": 2,
+            "size": {
+            "min": 1047,
+            "max": 1500,
+            "pulse": 0
+            },
+            "speed": {
+            "x": {
+                "min": 0.1,
+                "max": 0.3
+            },
+            "y": {
+                "min": 0.1,
+                "max": 0.3
+            }
+            },
+            "colors": {
+            "background": "#e2f1f8",
+            "particles": [
+                "#6bd6ff",
+                "#7e8cfe",
+                "#4f2e4d"
+            ]
+            },
+            "blending": "overlay",
+            "opacity": {
+            "center": 1,
+            "edge": 0.1
+            },
+            "skew": 0,
+            "shapes": [
+            "c"
+            ]
         });
     </script>
 

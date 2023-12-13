@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-const User = require("./User");
 
 const taskSchema = new mongoose.Schema({
   task: {
     type: String,
-    require: true,
+    required: true,
   },
   check: {
     type: Boolean,
@@ -13,11 +12,6 @@ const taskSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now(),
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
   },
 });
 
